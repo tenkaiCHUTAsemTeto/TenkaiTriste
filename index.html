@@ -1,3 +1,8 @@
+<audio controls>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,9 +20,10 @@
         }
         .neon-text {
             position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
             font-size: 2.5em;
             color: #00ff00;
             text-shadow: 
@@ -28,8 +34,8 @@
                 0 0 25px #00ff00;
             animation: flicker 1.5s infinite alternate;
             z-index: 9999;
-            width: 100%;
-            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8); /* Fundo semitransparente */
+            margin: 0;
         }
         @keyframes flicker {
             0% { opacity: 1; }
@@ -38,13 +44,13 @@
         }
         .banner {
             width: 100%;
-            height: 200px; /* Altura do banner; ajuste conforme o GIF */
-            background-image: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjd6YTJsdzdldGprcDJzcml6Y3JpOHRxbTR4ZnRxbWk5cmNtNWVnMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/V69LhUggYIg6qmKUoD/200.webp'); /* Substitua pela URL do seu GIF */
-            background-size: cover; /* Cobre toda a área */
-            background-position: center; /* Centraliza */
-            background-repeat: no-repeat; /* Não repete */
-            margin: 80px 0 20px 0; /* Espaço abaixo do texto neon */
-            border-radius: 10px; /* Bordas arredondadas opcionais */
+            height: 200px;
+            background-image: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjd6YTJsdzdldGprcDJzcml6Y3JpOHRxbTR4ZnRxbWk5cmNtNWVnMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/V69LhUggYIg6qmKUoD/200.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 100px 0 20px 0;
+            border-radius: 10px;
         }
         .content {
             max-width: 800px;
@@ -66,13 +72,14 @@
             border: 1px solid #b705d3;
             margin: 40px 0;
         }
-        /* Responsividade */
         @media (max-width: 600px) {
             .neon-text {
-                font-size: 2em;
+                font-size: 1.8em;
+                padding: 10px 0;
             }
             .banner {
-                height: 150px; /* Menor no mobile */
+                height: 150px;
+                margin: 80px 0 20px 0;
             }
         }
     </style>
@@ -80,7 +87,7 @@
 <body>
     <h1 class="neon-text">Tenakai</h1>
     
-    <div class="banner"></div> <!-- Banner com GIF aqui -->
+    <div class="banner"></div>
     
     <div class="content">
         <img src="img/sousou-no-frieren-frieren.gif" alt="Sua Foto">
