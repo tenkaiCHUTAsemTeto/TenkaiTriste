@@ -61,86 +61,31 @@
             border: 1px solid #b705d3;
             margin: 40px 0;
         }
-        /* Player de Música */
-        .music-player {
+        /* Player de Música YouTube */
+        .youtube-player {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            z-index: 9999;
             background: linear-gradient(135deg, #b705d3, #7b2cbf);
-            padding: 12px 20px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            padding: 10px;
+            border-radius: 15px;
             box-shadow: 
                 0 0 10px #b705d3,
                 0 0 20px #b705d3;
-            z-index: 9999;
-            transition: transform 0.3s ease;
         }
         
-        .music-player:hover {
-            transform: scale(1.05);
+        .youtube-player iframe {
+            border-radius: 10px;
+            border: none;
         }
         
-        .music-player button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid #00ff00;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .music-player button:hover {
-            background: #00ff00;
-            box-shadow: 0 0 15px #00ff00;
-        }
-        
-        .music-player button span {
-            font-size: 1.2em;
-        }
-        
-        .music-player .music-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .music-player .music-title {
-            font-size: 0.75em;
+        .youtube-player .player-label {
             color: #00ff00;
-            font-weight: bold;
+            font-size: 0.7em;
+            margin-bottom: 5px;
             text-shadow: 0 0 5px #00ff00;
-        }
-        
-        .music-player .music-status {
-            font-size: 0.65em;
-            color: #fff;
-            opacity: 0.8;
-        }
-        
-        /* Barra de progresso */
-        .progress-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: 9998;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #b705d3, #00ff00);
-            width: 0%;
-            transition: width 0.1s linear;
-            box-shadow: 0 0 10px #00ff00;
+            font-weight: bold;
         }
         
         /* Responsividade */
@@ -151,16 +96,11 @@
             .banner {
                 height: 150px;
             }
-            .music-player {
-                bottom: 15px;
-                right: 15px;
-                padding: 10px 15px;
-            }
-            .music-player .music-title {
-                font-size: 0.65em;
-            }
-            .music-player .music-status {
-                font-size: 0.55em;
+            .youtube-player {
+                bottom: 10px;
+                right: 10px;
+                transform: scale(0.8);
+                transform-origin: bottom right;
             }
         }
     </style>
@@ -199,78 +139,17 @@
         </div>
     </div>
     
-    <!-- Elemento de Áudio -->
-    <audio id="musica-fundo" loop>
-        <!-- Música gratuita do Archive.org -->
-        <source src="https://ia800905.us.archive.org/19/items/TetrisTheme/Tetris.mp3" type="audio/mpeg">
-    </audio>
-    
-    <!-- Player de Música -->
-    <div class="music-player">
-        <button id="playBtn" onclick="toggleMusica()">
-            <span id="playIcon">▶️</span>
-        </button>
-        <div class="music-info">
-            <span class="music-title">🎵 Tetris Theme</span>
-            <span class="music-status" id="statusText">Clique para tocar</span>
-        </div>
+    <!-- Player de Música YouTube -->
+    <div class="youtube-player">
+        <div class="player-label">🎵 Música de Fundo</div>
+        <iframe 
+            width="200" 
+            height="50" 
+            src="https://www.youtube.com/embed/pyGU-UudvrM?autoplay=1&loop=1&controls=0&modestbranding=1&rel=0" 
+            title="Música de fundo" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
     </div>
-    
-    <!-- Barra de Progresso -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-    
-    <script>
-        const musica = document.getElementById('musica-fundo');
-        const playBtn = document.getElementById('playBtn');
-        const playIcon = document.getElementById('playIcon');
-        const statusText = document.getElementById('statusText');
-        const progressBar = document.getElementById('progressBar');
-        let tocando = false;
-        
-        // Volume inicial (30%)
-        musica.volume = 0.3;
-        
-        function toggleMusica() {
-            if (tocando) {
-                musica.pause();
-                playIcon.textContent = '▶️';
-                statusText.textContent = 'Pausado';
-            } else {
-                musica.play()
-                    .then(() => {
-                        playIcon.textContent = '⏸️';
-                        statusText.textContent = 'Tocando...';
-                    })
-                    .catch(erro => {
-                        console.log('Erro ao reproduzir:', erro);
-                        statusText.textContent = 'Erro ao carregar';
-                    });
-            }
-            tocando = !tocando;
-        }
-        
-        // Atualizar barra de progresso
-        musica.addEventListener('timeupdate', () => {
-            if (musica.duration) {
-                const progresso = (musica.currentTime / musica.duration) * 100;
-                progressBar.style.width = progresso + '%';
-            }
-        });
-        
-        // Reiniciar quando terminar
-        musica.addEventListener('ended', () => {
-            playIcon.textContent = '▶️';
-            statusText.textContent = 'Finalizado';
-            progressBar.style.width = '0%';
-            tocando = false;
-        });
-        
-        // Quando a música carregar
-        musica.addEventListener('loadedmetadata', () => {
-            statusText.textContent = 'Pronto para tocar';
-        });
-    </script>
 </body>
 </html>
