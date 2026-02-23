@@ -61,65 +61,77 @@
             border: 1px solid #b705d3;
             margin: 40px 0;
         }
-        /* Player de Música YouTube */
-        .youtube-player {
+        .music-player {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 9999;
             background: linear-gradient(135deg, #b705d3, #7b2cbf);
-            padding: 10px;
-            border-radius: 15px;
-            box-shadow: 
-                0 0 10px #b705d3,
-                0 0 20px #b705d3;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 0 15px #b705d3, 0 0 30px rgba(183, 5, 211, 0.5);
+            z-index: 9999;
         }
-        
-        .youtube-player iframe {
-            border-radius: 10px;
-            border: none;
+        .music-player button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #00ff00;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            font-size: 1.3em;
+            transition: all 0.3s ease;
         }
-        
-        .youtube-player .player-label {
+        .music-player button:hover {
+            background: #00ff00;
+            box-shadow: 0 0 20px #00ff00;
+        }
+        .music-player .music-title {
+            font-size: 0.8em;
             color: #00ff00;
-            font-size: 0.7em;
-            margin-bottom: 5px;
-            text-shadow: 0 0 5px #00ff00;
             font-weight: bold;
         }
-        
-        /* Responsividade */
+        .music-player .music-status {
+            font-size: 0.7em;
+            color: #fff;
+            opacity: 0.8;
+        }
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 9998;
+            cursor: pointer;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #b705d3, #00ff00);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px #00ff00;
+        }
         @media (max-width: 600px) {
-            .neon-text {
-                font-size: 2em;
-            }
-            .banner {
-                height: 150px;
-            }
-            .youtube-player {
-                bottom: 10px;
-                right: 10px;
-                transform: scale(0.8);
-                transform-origin: bottom right;
-            }
+            .neon-text { font-size: 2em; }
+            .banner { height: 150px; }
+            .music-player { bottom: 10px; right: 10px; padding: 10px 15px; }
         }
     </style>
 </head>
 <body>
     <h1 class="neon-text">Tenakai</h1>
-    
     <div class="banner"></div>
-    
     <div class="content">
         <img src="img/sousou-no-frieren-frieren.gif" alt="Sua Foto">
-        
         <div class="section">
             <h2>Sobre Mim</h2>
             <p>Aooba! Sou Tenakai, sou um programador iniciante e jogador de Roblox.</p>
         </div>
-        
         <hr>
-        
         <div class="section">
             <h2>Habilidades</h2>
             <ul>
@@ -128,9 +140,7 @@
                 <li>[Outras habilidades]</li>
             </ul>
         </div>
-        
         <hr>
-        
         <div class="section">
             <h2>Contato</h2>
             <p>Email: NAOtenhoemailprabota@gmail.com</p>
@@ -138,19 +148,53 @@
             <p>LinkedIn: [link]</p>
         </div>
     </div>
-    
-    <!-- Player de Música YouTube -->
-    <div class="youtube-player">
-        <div class="player-label">🎵 Música de Fundo</div>
-        <iframe 
-            width="200" 
-            height="50" 
-            src="https://www.youtube.com/embed/pyGU-UudvrM?autoplay=1&loop=1&controls=0&modestbranding=1&rel=0" 
-            title="Música de fundo" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
+    <audio id="musica-fundo" loop>
+        <source src="https://o.uguu.se/BstfbAZM.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-player">
+        <button onclick="toggleMusica()">▶️</button>
+        <div>
+            <div class="music-title">🎵 Música</div>
+            <div class="music-status" id="statusText">Clique para tocar</div>
+        </div>
     </div>
+    <div class="progress-container" onclick="mudarPosicao(event)">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <script>
+        const musica = document.getElementById('musica-fundo');
+        const statusText = document.getElementById('statusText');
+        const progressBar = document.getElementById('progressBar');
+        let tocando = false;
+        musica.volume = 0.3;
+        function toggleMusica() {
+            if (tocando) {
+                musica.pause();
+                statusText.textContent = 'Pausado';
+            } else {
+                musica.play().then(() => {
+                    statusText.textContent = 'Tocando...';
+                }).catch(() => {
+                    statusText.textContent = 'Erro ao carregar';
+                });
+            }
+            tocando = !tocando;
+        }
+        musica.addEventListener('timeupdate', () => {
+            if (musica.duration) {
+                const progresso = (musica.currentTime / musica.duration) * 100;
+                progressBar.style.width = progresso + '%';
+            }
+        });
+        function mudarPosicao(event) {
+            const container = document.querySelector('.progress-container');
+            const clickPosition = (event.offsetX / container.offsetWidth) * musica.duration;
+            musica.currentTime = clickPosition;
+        }
+        musica.addEventListener('ended', () => {
+            progressBar.style.width = '0%';
+            statusText.textContent = 'Tocando...';
+        });
+    </script>
 </body>
 </html>
- 
