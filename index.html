@@ -15,13 +15,13 @@
         }
         .neon-text {
             font-size: 2.5em;
-            color: #700092;
+            color: #00ff00;
             text-shadow: 
-                0 0 5px #000000,
-                0 0 10px #000000,
-                0 0 15px hwb(278 0% 27%),
-                0 0 20px #000000,
-                0 0 25px #000000;
+                0 0 5px #00ff00,
+                0 0 10px #00ff00,
+                0 0 15px #00ff00,
+                0 0 20px #00ff00,
+                0 0 25px #00ff00;
             animation: flicker 1.5s infinite alternate;
             margin: 0;
             padding: 20px 0;
@@ -61,6 +61,88 @@
             border: 1px solid #b705d3;
             margin: 40px 0;
         }
+        /* Player de Música */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #b705d3, #7b2cbf);
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 
+                0 0 10px #b705d3,
+                0 0 20px #b705d3;
+            z-index: 9999;
+            transition: transform 0.3s ease;
+        }
+        
+        .music-player:hover {
+            transform: scale(1.05);
+        }
+        
+        .music-player button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #00ff00;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .music-player button:hover {
+            background: #00ff00;
+            box-shadow: 0 0 15px #00ff00;
+        }
+        
+        .music-player button span {
+            font-size: 1.2em;
+        }
+        
+        .music-player .music-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .music-player .music-title {
+            font-size: 0.75em;
+            color: #00ff00;
+            font-weight: bold;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        
+        .music-player .music-status {
+            font-size: 0.65em;
+            color: #fff;
+            opacity: 0.8;
+        }
+        
+        /* Barra de progresso */
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 9998;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #b705d3, #00ff00);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
         /* Responsividade */
         @media (max-width: 600px) {
             .neon-text {
@@ -68,6 +150,17 @@
             }
             .banner {
                 height: 150px;
+            }
+            .music-player {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 15px;
+            }
+            .music-player .music-title {
+                font-size: 0.65em;
+            }
+            .music-player .music-status {
+                font-size: 0.55em;
             }
         }
     </style>
@@ -105,14 +198,79 @@
             <p>LinkedIn: [link]</p>
         </div>
     </div>
+    
+    <!-- Elemento de Áudio -->
+    <audio id="musica-fundo" loop>
+        <!-- SUBSTITUA "audio/musica.mp3" PELO CAMINHO DA SUA MÚSICA -->
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Player de Música -->
+    <div class="music-player">
+        <button id="playBtn" onclick="toggleMusica()">
+            <span id="playIcon">▶️</span>
+        </button>
+        <div class="music-info">
+            <span class="music-title">🎵 Tenakai's Mix</span>
+            <span class="music-status" id="statusText">Clique para tocar</span>
+        </div>
+    </div>
+    
+    <!-- Barra de Progresso -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <script>
+        const musica = document.getElementById('musica-fundo');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const statusText = document.getElementById('statusText');
+        const progressBar = document.getElementById('progressBar');
+        let tocando = false;
+        
+        // Volume inicial (30%)
+        musica.volume = 0.3;
+        
+        function toggleMusica() {
+            if (tocando) {
+                musica.pause();
+                playIcon.textContent = '▶️';
+                statusText.textContent = 'Pausado';
+            } else {
+                musica.play()
+                    .then(() => {
+                        playIcon.textContent = '⏸️';
+                        statusText.textContent = 'Tocando...';
+                    })
+                    .catch(erro => {
+                        console.log('Erro ao reproduzir:', erro);
+                        statusText.textContent = 'Arquivo não encontrado';
+                    });
+            }
+            tocando = !tocando;
+        }
+        
+        // Atualizar barra de progresso
+        musica.addEventListener('timeupdate', () => {
+            const progresso = (musica.currentTime / musica.duration) * 100;
+            progressBar.style.width = progresso + '%';
+        });
+        
+        // Reiniciar quando terminar
+        musica.addEventListener('ended', () => {
+            playIcon.textContent = '▶️';
+            statusText.textContent = 'Finalizado';
+            progressBar.style.width = '0%';
+            tocando = false;
+        });
+        
+        // Clique na barra de progresso para mudar posição
+        document.querySelector('.progress-container').addEventListener('click', (e) => {
+            const container = document.querySelector('.progress-container');
+            const clickPosition = (e.offsetX / container.offsetWidth) * musica.duration;
+            musica.currentTime = clickPosition;
+        });
+    </script>
 </body>
-<!-- Player de áudio -->
-<audio id="musica-fundo" autoplay loop>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Botões de controle -->
-<div class="player-musica">
-    <button onclick="toggleMusica()">🔊/🔇</button>
-</div>
 </html>
