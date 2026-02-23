@@ -166,7 +166,14 @@
         const statusText = document.getElementById('statusText');
         const progressBar = document.getElementById('progressBar');
         let tocando = false;
+        
         musica.volume = 0.3;
+
+        // Tocar música automaticamente ao abrir
+        window.onload = function() {
+            toggleMusica();
+        };
+
         function toggleMusica() {
             if (tocando) {
                 musica.pause();
