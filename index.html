@@ -201,8 +201,8 @@
     
     <!-- Elemento de Áudio -->
     <audio id="musica-fundo" loop>
-        <!-- Música de teste gratuita -->
-        <source src="https://open.spotify.com/intl-pt/track/0myRViRgmQ3J8izICXEAVO?si=efbe4cf1e6f943e8.mp3" type="audio/mpeg">
+        <!-- Música gratuita do Archive.org -->
+        <source src="https://ia800905.us.archive.org/19/items/TetrisTheme/Tetris.mp3" type="audio/mpeg">
     </audio>
     
     <!-- Player de Música -->
@@ -211,7 +211,7 @@
             <span id="playIcon">▶️</span>
         </button>
         <div class="music-info">
-            <span class="music-title">🎵 Tenakai's Mix</span>
+            <span class="music-title">🎵 Tetris Theme</span>
             <span class="music-status" id="statusText">Clique para tocar</span>
         </div>
     </div>
@@ -245,7 +245,7 @@
                     })
                     .catch(erro => {
                         console.log('Erro ao reproduzir:', erro);
-                        statusText.textContent = 'Arquivo não encontrado';
+                        statusText.textContent = 'Erro ao carregar';
                     });
             }
             tocando = !tocando;
@@ -253,8 +253,10 @@
         
         // Atualizar barra de progresso
         musica.addEventListener('timeupdate', () => {
-            const progresso = (musica.currentTime / musica.duration) * 100;
-            progressBar.style.width = progresso + '%';
+            if (musica.duration) {
+                const progresso = (musica.currentTime / musica.duration) * 100;
+                progressBar.style.width = progresso + '%';
+            }
         });
         
         // Reiniciar quando terminar
@@ -265,11 +267,9 @@
             tocando = false;
         });
         
-        // Clique na barra de progresso para mudar posição
-        document.querySelector('.progress-container').addEventListener('click', (e) => {
-            const container = document.querySelector('.progress-container');
-            const clickPosition = (e.offsetX / container.offsetWidth) * musica.duration;
-            musica.currentTime = clickPosition;
+        // Quando a música carregar
+        musica.addEventListener('loadedmetadata', () => {
+            statusText.textContent = 'Pronto para tocar';
         });
     </script>
 </body>
