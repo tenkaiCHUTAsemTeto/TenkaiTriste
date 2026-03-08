@@ -15,13 +15,13 @@
         }
         .neon-text {
             font-size: 2.5em;
-            color: #73008a;
+            color: #ffffff;
             text-shadow: 
-                0 0 5px #000000,
-                0 0 10px #000000,
-                0 0 15px #000000,
-                0 0 20px #000000,
-                0 0 25px #000000;
+                0 0 5px #73008a,
+                0 0 10px #73008a,
+                0 0 15px #73008a,
+                0 0 20px #73008a,
+                0 0 25px #73008a;
             animation: flicker 1.5s infinite alternate;
             margin: 0;
             padding: 20px 0;
@@ -33,13 +33,14 @@
         }
         .banner {
             width: 100%;
-            height: 200px;
-            background-image: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjd6YTJsdzdldGprcDJzcml6Y3JpOHRxbTR4ZnRxbWk5cmNtNWVnMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/V69LhUggYIg6qmKUoD/200.webp');
+            height: 300px; /* Banner maior */
+            background-image: url(img/Redirect\ Notice.gif);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             margin: 20px 0 20px 0;
             border-radius: 10px;
+            /* BORDA REMOVIDA */
         }
         .content {
             max-width: 800px;
@@ -56,6 +57,7 @@
             width: 150px;
             height: 150px;
             margin: 20px 0;
+            /* BORDA DO ÍCONE REMOVIDA */
         }
         hr {
             border: 1px solid #b705d3;
@@ -148,7 +150,7 @@
         }
         @media (max-width: 600px) {
             .neon-text { font-size: 2em; }
-            .banner { height: 150px; }
+            .banner { height: 200px; }
             .music-player { bottom: 10px; right: 10px; padding: 10px 15px; }
             .tela-entrada h1 { font-size: 2em; }
         }
@@ -162,12 +164,15 @@
     </div>
 
     <h1 class="neon-text">Tenakai</h1>
+    
+    <!-- Banner atualizado -->
     <div class="banner"></div>
+    
     <div class="content">
         <img src="img/sousou-no-frieren-frieren.gif" alt="Sua Foto">
         <div class="section">
             <h2>Sobre Mim</h2>
-            <p>Aooba! Sou Tenakai, sou um programador iniciante e jogador de Roblox.</p>
+            <p>Aooba! Sou Tenakai, sou um programador iniciante e jogo vários jogos.</p>
         </div>
         <hr>
         <div class="section">
@@ -186,9 +191,12 @@
             <p>LinkedIn: [link]</p>
         </div>
     </div>
+    
+    <!-- Áudio -->
     <audio id="musica-fundo" loop>
         <source src="audio/She & Him - I Thought I Saw Your Face Today (Official Lyric Video) - SheandHimOfficial (youtube).mp3" type="audio/mpeg">
     </audio>
+    
     <div class="music-player">
         <button onclick="toggleMusica()">▶️</button>
         <div>
@@ -196,9 +204,11 @@
             <div class="music-status" id="statusText">Pausado</div>
         </div>
     </div>
+    
     <div class="progress-container" onclick="mudarPosicao(event)">
         <div class="progress-bar" id="progressBar"></div>
     </div>
+    
     <script>
         const musica = document.getElementById('musica-fundo');
         const statusText = document.getElementById('statusText');
@@ -208,9 +218,7 @@
         musica.volume = 0.3;
 
         function entrarNoSite() {
-            // some com a tela de entrada
             document.querySelector('.tela-entrada').style.display = 'none';
-            // toca a música
             musica.play().then(() => {
                 statusText.textContent = 'Tocando...';
                 tocando = true;
@@ -232,17 +240,20 @@
             }
             tocando = !tocando;
         }
+        
         musica.addEventListener('timeupdate', () => {
             if (musica.duration) {
                 const progresso = (musica.currentTime / musica.duration) * 100;
                 progressBar.style.width = progresso + '%';
             }
         });
+        
         function mudarPosicao(event) {
             const container = document.querySelector('.progress-container');
             const clickPosition = (event.offsetX / container.offsetWidth) * musica.duration;
             musica.currentTime = clickPosition;
         }
+        
         musica.addEventListener('ended', () => {
             progressBar.style.width = '0%';
             statusText.textContent = 'Tocando...';
